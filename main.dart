@@ -12,7 +12,7 @@ class ExpenseTrackerApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      darkTheme: ThemeData.dark(), // Use dark theme here
+      darkTheme: ThemeData.dark(),
       home: ExpenseDashboard(),
     );
   }
@@ -24,7 +24,6 @@ class ExpenseDashboard extends StatefulWidget {
 }
 
 class _ExpenseDashboardState extends State<ExpenseDashboard> {
-  // Sample weekly income
   double weeklyIncome = 1000.0;
 
   @override
@@ -32,6 +31,36 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Expense Tracker Dashboard'),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            ListTile(
+              title: Text('Item 1'),
+              onTap: () {
+                Navigator.pop(context);
+                // Handle item 1 selection here
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                Navigator.pop(context);
+                // Handle item 2 selection here
+              },
+            ),
+            // Add more menu items as needed
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -42,7 +71,7 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.35, // Set a fixed width (35% of screen width)
+                  width: MediaQuery.of(context).size.width * 0.35,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -54,7 +83,6 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
                           color: Colors.blue,
                         ),
                       ),
-                      // Wrap the expense amount in a decorated container
                       Container(
                         padding: EdgeInsets.all(12),
                         decoration: BoxDecoration(
@@ -74,7 +102,7 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.35, // Set a fixed width (35% of screen width)
+                  width: MediaQuery.of(context).size.width * 0.35,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -86,11 +114,10 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
                           color: Colors.blue,
                         ),
                       ),
-                      // Wrap the weekly income in a decorated container
                       Container(
                         padding: EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.green, 
+                          color: Colors.green,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
@@ -196,7 +223,7 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(12),
-      width: MediaQuery.of(context).size.width * 0.28, 
+      width: MediaQuery.of(context).size.width * 0.28,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(10),
@@ -270,7 +297,7 @@ class TransactionCard extends StatelessWidget {
         trailing: Text(
           '\$$amount',
           style: TextStyle(
-            fontSize: 25, 
+            fontSize: 25,
             fontWeight: FontWeight.bold,
             color: Colors.blue,
           ),
@@ -279,3 +306,4 @@ class TransactionCard extends StatelessWidget {
     );
   }
 }
+
