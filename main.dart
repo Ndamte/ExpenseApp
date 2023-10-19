@@ -1,7 +1,7 @@
+import 'package:dashboard/add_expense.dart';
+import 'package:dashboard/add_income.dart';
 import 'package:flutter/material.dart';
 import 'database/db.dart';
-import 'add_income.dart'; // Import your AddIncomePage
-import 'add_expense.dart'; // Import your AddExpensePage
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,12 +48,13 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
   _fetchData() async {
     expenses = await database.getExpenses();
     incomes = await database.getIncomes();
-    for (final expense in expenses) {
+    for(final expense in expenses){
       e_total += expense['amount'];
     }
-    for (final income in incomes) {
+    for(final income in incomes){
       i_total += income['amount'];
     }
+
   }
 
   @override
@@ -74,7 +75,7 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            ListTile(
+               ListTile(
               title: Text('Add Income'),
               onTap: () {
                 Navigator.of(context).push(
@@ -167,7 +168,94 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
               ],
             ),
             SizedBox(height: 20),
-            // ... (other code) ...
+            // Text(
+            //   'Expense Categories',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.blue,
+            //   ),
+            // ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                // ListView.builder(
+                //     itemCount: 1,
+                //     itemBuilder: ((context, index) {
+                //       return 
+                //         CategoryCard(
+                //           categoryName: 'shopping',
+                //           // categoryName: '${expenses[index]["category"]}',
+                //           amountSpent: e_sum,
+                //           color: Colors.purple,
+                //         );
+                //   })),
+                // CategoryCard(
+                //   categoryName: 'Food',
+                //   amountSpent: 150.00,
+                //   color: Colors.green,
+                // ),
+                // CategoryCard(
+                //   categoryName: 'Transportation',
+                //   amountSpent: 100.00,
+                //   color: Colors.orange,
+                // ),
+                // CategoryCard(
+                //   categoryName: 'Shopping',
+                //   amountSpent: 200.00,
+                //   color: Colors.purple,
+                // ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Recent Transactions',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: expenses.length,
+                itemBuilder: (context, index) {
+                  return 
+                  TransactionCard(
+                    transactionName: '${expenses[index]["category"]}',
+                    amount:  expenses[index]["amount"],
+                    date: '${expenses[index]["expense_date"]}',
+                    icon: Icons.shopping_cart,
+                    categoryColor: Colors.purple,
+                  );
+                }
+              ),
+            ),
+
+
+            // TransactionCard(
+            //   transactionName: 'Restaurant',
+            //   amount: 50.00,
+            //   date: 'Oct 1, 2023',
+            //   icon: Icons.fastfood,
+            //   categoryColor: Colors.green,
+            // ),
+            // TransactionCard(
+            //   transactionName: 'Gas Station',
+            //   amount: 30.00,
+            //   date: 'Sep 30, 2023',
+            //   icon: Icons.local_gas_station,
+            //   categoryColor: Colors.orange,
+            // ),
+            // TransactionCard(
+            //   transactionName: 'Electronics Store',
+            //   amount: 120.00,
+            //   date: 'Sep 29, 2023',
+            //   icon: Icons.shopping_cart,
+            //   categoryColor: Colors.purple,
+            // ),
           ],
         ),
       ),
@@ -179,8 +267,6 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
       ),
     );
   }
-
-  // ... (other code) ...
 }
 
 class CategoryCard extends StatelessWidget {
