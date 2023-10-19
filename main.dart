@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'database/db.dart';
+import 'add_income.dart'; // Import your AddIncomePage
+import 'add_expense.dart'; // Import your AddExpensePage
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await database.init();
   runApp(ExpenseTrackerApp());
 }
+
+final database = ExpenseDatabase();
 
 class ExpenseTrackerApp extends StatelessWidget {
   @override
@@ -25,6 +32,29 @@ class ExpenseDashboard extends StatefulWidget {
 
 class _ExpenseDashboardState extends State<ExpenseDashboard> {
   double weeklyIncome = 1000.0;
+  List<Map<String, dynamic>> expenses = [];
+  List<Map<String, dynamic>> incomes = [];
+  List<Map<String, dynamic>> total = [];
+
+  double e_total = 0;
+  double i_total = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  _fetchData() async {
+    expenses = await database.getExpenses();
+    incomes = await database.getIncomes();
+    for (final expense in expenses) {
+      e_total += expense['amount'];
+    }
+    for (final income in incomes) {
+      i_total += income['amount'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +75,19 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
           padding: EdgeInsets.zero,
           children: [
             ListTile(
-              title: Text('Item 1'),
+              title: Text('Add Income'),
               onTap: () {
-                Navigator.pop(context);
-                // Handle item 1 selection here
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddIncomePage()), // Navigate to AddIncomePage
+                );
               },
             ),
             ListTile(
-              title: Text('Item 2'),
+              title: Text('Add Expense'),
               onTap: () {
-                Navigator.pop(context);
-                // Handle item 2 selection here
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AddExpensePage()), // Navigate to AddExpensePage
+                );
               },
             ),
             // Add more menu items as needed
@@ -90,7 +122,7 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          '\$500.00',
+                          '\$${e_total}',
                           style: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
@@ -121,7 +153,7 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          '\$$weeklyIncome',
+                          '\$${i_total}',
                           style: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
@@ -135,66 +167,7 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
               ],
             ),
             SizedBox(height: 20),
-            Text(
-              'Expense Categories',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                CategoryCard(
-                  categoryName: 'Food',
-                  amountSpent: 150.00,
-                  color: Colors.green,
-                ),
-                CategoryCard(
-                  categoryName: 'Transportation',
-                  amountSpent: 100.00,
-                  color: Colors.orange,
-                ),
-                CategoryCard(
-                  categoryName: 'Shopping',
-                  amountSpent: 200.00,
-                  color: Colors.purple,
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Recent Transactions',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-            SizedBox(height: 10),
-            TransactionCard(
-              transactionName: 'Restaurant',
-              amount: 50.00,
-              date: 'Oct 1, 2023',
-              icon: Icons.fastfood,
-              categoryColor: Colors.green,
-            ),
-            TransactionCard(
-              transactionName: 'Gas Station',
-              amount: 30.00,
-              date: 'Sep 30, 2023',
-              icon: Icons.local_gas_station,
-              categoryColor: Colors.orange,
-            ),
-            TransactionCard(
-              transactionName: 'Electronics Store',
-              amount: 120.00,
-              date: 'Sep 29, 2023',
-              icon: Icons.shopping_cart,
-              categoryColor: Colors.purple,
-            ),
+            // ... (other code) ...
           ],
         ),
       ),
@@ -206,6 +179,8 @@ class _ExpenseDashboardState extends State<ExpenseDashboard> {
       ),
     );
   }
+
+  // ... (other code) ...
 }
 
 class CategoryCard extends StatelessWidget {
@@ -306,4 +281,3 @@ class TransactionCard extends StatelessWidget {
     );
   }
 }
-
